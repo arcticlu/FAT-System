@@ -92,7 +92,10 @@ int main()
         Boot_Sector_Vals(&fileBoot);
         printf("%s\n", fileBoot.BS_VolLab);
 
-        printf("%d\n", fileBoot.BPB_BytsPerSec);
+        //printf("%d\n", fileBoot.BPB_BytsPerSec);
+        void *temp;
+
+
 
 
 
@@ -107,7 +110,13 @@ int main()
         //get value of first cluster number - not at first 16 bits of table
         //seek to next cluster number*16 
 
-
+    printf("fat size: %d\n", fatBytes);
+        uint16_t buffer[100]; //make this buffer the size of the fat (num of bytes/2 cause 16bit uints) and give this array a better name [can be in seperate function]
+        lseek(fd, fatStart, SEEK_SET);
+        lseek(fd, 4, SEEK_CUR); //skip first two sections to get to 1st clusterNum
+        lseek(fd, -68, SEEK_CUR); //THIS MEANS MY VALUE FOR fatStart IS 68 BYTES OUT (look at values ~16 -> ~25, they are consecutive clusters in a file)
+        read(fd, buffer, 200);
+        printf("%d\n", buffer[24]);
 
 
     //start of directory
@@ -117,6 +126,7 @@ int main()
 
     //loop (each entry is 22 bytes)
         //lseek(fd, 22, SEEK_CUR);
+
         //create entry
         //add this entry to the running table in format stated in task 4 description
     }   
